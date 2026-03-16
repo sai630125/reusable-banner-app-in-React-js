@@ -4,12 +4,12 @@ services:
     container_name: afm-mssql
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "StrongPass!234"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
       MSSQL_PID: "Developer"
     ports:
       - "1433:1433"
     healthcheck:
-      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-C", "-S", "localhost", "-U", "sa", "-P", "StrongPass!234", "-Q", "SELECT 1"]
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$MSSQL_SA_PASSWORD\" -Q \"SELECT 1\""]
       interval: 10s
       timeout: 5s
       retries: 20
@@ -23,7 +23,7 @@ services:
         condition: service_healthy
     volumes:
       - ./backend/database/init.sql:/scripts/init.sql:ro
-    entrypoint: ["/bin/bash", "-c", "/opt/mssql-tools/bin/sqlcmd -S mssql -U sa -P 'StrongPass!234' -i /scripts/init.sql"]
+    entrypoint: ["/bin/bash", "-c", "/opt/mssql-tools/bin/sqlcmd -S mssql -U sa -P \"$MSSQL_SA_PASSWORD\" -i /scripts/init.sql"]
 
 volumes:
   mssql-data:
