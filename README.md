@@ -1,90 +1,100 @@
-In this project, let's build **Reusable Banners** by applying the concepts we have learned till now.
+# Full Stack Login + Dashboard App (React + Spring Boot + MSSQL)
 
-### Refer to the image below:
+This workspace now includes:
+- Frontend React app with Login page (`username`, `password`, `Login` button)
+- Spring Boot backend API for authentication
+- Microsoft SQL Server setup with database/user provisioning
+- Dashboard page shown after successful login
 
-<br/>
-<div style="text-align: center;">
-<img src="https://assets.ccbp.in/frontend/content/react-js/resuable-banners-lg-output.png" alt="resuable-banners-output" style="max-width:70%;box-shadow:0 2.8px 2.2px rgba(0, 0, 0, 0.12)">
-</div>
-<br/>
+## Project Structure
 
-### Design Files
+- `src/` : React frontend
+- `backend/` : Spring Boot backend
+- `backend/database/init.sql` : DB creation script
+- `docker-compose.yml` : SQL Server container + DB init runner
 
-<details>
-<summary>Click to view</summary>
+## Database Credentials
 
-- [Extra Small (Size < 576px), Small (Size >= 576px), Medium (Size >= 768px)](https://assets.ccbp.in/frontend/content/react-js/reusable-banners-sm-output-v2.png)
-- [Large (Size >= 992px) and Extra Large (Size >= 1200px)](https://assets.ccbp.in/frontend/content/react-js/resuable-banners-lg-output.png)
+As requested, SQL Server login is configured as:
+- Username: `afm`
+- Password: `afm`
 
-</details>
+Database name:
+- `afm_auth_db`
 
-### Set Up Instructions
+## Authentication API
 
-<details>
-<summary>Click to view</summary>
+Backend endpoint:
+- `POST /api/auth/login`
 
-- Download dependencies by running `npm install`
-- Start up the app using `npm start`
-</details>
+Request body:
 
-### Completion Instructions
+```json
+{
+  "username": "afm",
+  "password": "afm"
+}
+```
 
-<details>
-<summary>Functionality to be added</summary>
-<br/>
+Success response:
 
-The app must have the following functionalities
+```json
+{
+  "id": 1,
+  "username": "afm",
+  "fullName": "AFM User",
+  "email": "afm@example.com"
+}
+```
 
-- The App is provided with `bannerCardsList`. It consists of a list of bannerCardItem objects with the following properties in each bannerCardItem object
+## Prerequisites
 
-  |     Key     | Data Type |
-  | :---------: | :-------: |
-  |     id      |  Number   |
-  | headerText  |  String   |
-  | description |  String   |
-  |  className  |  String   |
+Install these tools on your machine/dev container:
+- Node.js + npm
+- Java 17+
+- Maven 3.9+
+- Docker + Docker Compose
 
-- The value of the key `id` should be used as a key to the `BannerCardItem` component.
-- The value of the key `className` should be used as a className for the HTML list item in the `BannerCardItem` component.
+## Run Instructions
 
-</details>
+### 1) Start MSSQL and create DB/user automatically
 
-<details>
-<summary>Implementation Files</summary>
-<br/>
+```bash
+docker compose up -d mssql mssql-init
+```
 
-Use these files to complete the implementation:
+### 2) Start Spring Boot backend
 
-- `src/App.js`
-- `src/App.css`
-- `src/components/BannerCardItem/index.js`
-- `src/components/BannerCardItem/index.css`
-</details>
+```bash
+cd backend
+mvn spring-boot:run
+```
 
-### Resources
+Backend runs on:
+- `http://localhost:8080`
 
-<details>
-<summary>Colors</summary>
+### 3) Start React frontend
 
-<br/>
+Open a new terminal:
 
-<div style="background-color: #cbced2; width: 150px; padding: 10px; color: black">Hex: #cbced2</div>
-<div style="background-color: #64748b; width: 150px; padding: 10px; color: white">Hex: #64748b</div>
-<div style="background-color: #ffffff; width: 150px; padding: 10px; color: black">Hex: #ffffff</div>
-<div style="background-color: #326a9d; width: 150px; padding: 10px; color: white">Hex: #326a9d</div>
+```bash
+npm install
+npm start
+```
 
-</details>
+Frontend runs on:
+- `http://localhost:3000`
 
-<details>
-<summary>Font-families</summary>
+## Login in UI
 
-- Roboto
+Use these app login credentials (seeded automatically by backend):
+- Username: `afm`
+- Password: `afm`
 
-</details>
+After successful login, dashboard shows user profile details.
 
-> ### _Things to Keep in Mind_
->
-> - All components you implement should go in the `src/components` directory.
-> - Don't change the component folder names as those are the files being imported into the tests.
-> - **Do not remove the pre-filled code**
-> - Want to quickly review some of the concepts you’ve been learning? Take a look at the Cheat Sheets.
+## Notes
+
+- The backend uses BCrypt password hashing and stores a default user (`afm`) if not present.
+- CORS is enabled for frontend origin `http://localhost:3000`.
+- JPA auto-creates/updates the `users` table.
