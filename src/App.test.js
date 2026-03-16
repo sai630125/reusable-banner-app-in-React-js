@@ -18,7 +18,7 @@ describe('App component', () => {
       email: 'afm@example.com',
     }
 
-    global.fetch = jest.fn(() =>
+    jest.spyOn(global, 'fetch').mockImplementation(() =>
       Promise.resolve({
         ok: true,
         json: () => Promise.resolve(mockResponse),
