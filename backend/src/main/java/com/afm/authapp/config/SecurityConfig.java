@@ -18,9 +18,11 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    
+    http
+        .csrf(csrf -> csrf.disable())
+        .cors(Customizer.withDefaults())
         .authorizeHttpRequests(auth -> auth
-          .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/auth/health").permitAll()
             .anyRequest().authenticated())
