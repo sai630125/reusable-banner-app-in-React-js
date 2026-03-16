@@ -6,7 +6,9 @@ GO
 
 IF SUSER_ID('afm') IS NULL
 BEGIN
-  CREATE LOGIN afm WITH PASSWORD='afm', CHECK_POLICY=OFF, CHECK_EXPIRATION=OFF;
+  -- NOTE: Provide a strong password via SQLCMD variable, e.g.:
+  -- sqlcmd -v AFM_LOGIN_PASSWORD="Str0ng!Passw0rd#ChangeMe"
+  CREATE LOGIN afm WITH PASSWORD = '$(AFM_LOGIN_PASSWORD)', CHECK_POLICY = ON, CHECK_EXPIRATION = ON;
 END
 GO
 
