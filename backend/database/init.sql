@@ -21,5 +21,11 @@ BEGIN
 END
 GO
 
-ALTER ROLE db_owner ADD MEMBER afm;
+IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = 'afm_auth_role' AND type = 'R')
+BEGIN
+  CREATE ROLE afm_auth_role;
+END
+GO
+
+ALTER ROLE afm_auth_role ADD MEMBER afm;
 GO
