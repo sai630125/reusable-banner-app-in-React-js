@@ -47,12 +47,37 @@ const App = () => {
         body: JSON.stringify({username, password}),
       })
 
-      const data = await response.json()
-      if (!response.ok) {
-        throw new Error(data.message || 'Authentication failed')
+      const contentType = response.headers.get('content-type') || ''
+      let parsedBody = null
+
+      if (contentType.includes('application/json')) {
+        try {
+          parsedBody = await response.json()
+        } catch {
+          parsedBody = null
+        }
+      } else {
+        try {
+          const text = await response.text()
+          parsedBody = text ? {message: text} : null
+        } catch {
+          parsedBody = null
+        }
       }
 
-      setProfile(data)
+      if (!response.ok) {
+        const message =
+          parsedBody && typeof parsedBody === 'object' && 'message' in parsedBody && parsedBody.message
+            ? parsedBody.message
+            : 'Authentication failed'
+        throw new Error(message)
+      }
+
+      if (!parsedBody) {
+        throw new Error('Unexpected response from server')
+      }
+
+      setProfile(parsedBody)
     } catch (error) {
       if (error.message === 'Failed to fetch') {
         setErrorMessage(`Unable to reach backend at ${LOGIN_API_URL}`)
