@@ -1,4 +1,4 @@
-import './index.css'
+import './BannerCardItem.css'
 
 const BannerCardItem = () => (
   <div>
