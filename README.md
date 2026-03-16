@@ -96,5 +96,5 @@ After successful login, dashboard shows user profile details.
 ## Notes
 
 - The backend uses BCrypt password hashing and stores a default user (`afm`) if not present.
-- CORS is enabled for frontend origin `http://localhost:3000`.
+- CORS is currently configured to allow requests from any origin (using `allowedOriginPatterns("*")` in the backend CORS configuration).
 - JPA auto-creates/updates the `users` table.
